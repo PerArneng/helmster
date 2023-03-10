@@ -1,7 +1,8 @@
 
 use clap::{Arg, Command};
 mod commands;
-use commands::init::create_init_command;
+use commands::init::init_create;
+use crate::commands::init::init_run;
 
 fn main() {
 
@@ -12,22 +13,12 @@ fn main() {
         .author("Per Arneng <per.arneng@scalebit.com>")
         .about("A tool that generates Helm charts that can run a scripts without the need for a custom base images")
         .subcommands(vec![
-            create_init_command(),
+            init_create(),
         ])
         .get_matches();
 
-    match matches.subcommand_matches("init") {
-        Some(matches) => {
-            println!("init");
-            //println!("name: {:?}", matches.value_of("name").expect("required"));
-            if let Some(c) = matches.get_one::<String>("name") {
-                println!("Value for -n: {}", c);
-            }
-        },
-        None => {
-            println!("no subcommand");
-        }
+    if let Some(matches) = matches.subcommand_matches("init") {
+        init_run(matches)
     }
-
 
 }
